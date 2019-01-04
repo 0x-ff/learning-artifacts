@@ -180,3 +180,68 @@ class Rabbit extends Animal {
     }
 }
 new Rabbit("Вася").walk();
+
+//
+// symbol
+let sym = Symbol();
+alert( typeof sym ); // symbol
+
+let sym = Symbol("name");
+alert( sym.toString() ); // Symbol(name)
+alert( Symbol("name") == Symbol("name") ); // false
+
+let name = Symbol.for("name");
+alert( Symbol.for("name") == name ); // true
+
+let user = {
+    name: "Вася",
+    age: 30,
+    [Symbol.for("isAdmin")]: true
+};
+// в цикле for..in также не будет символа
+alert( Object.keys(user) ); // name, age
+// доступ к свойству через глобальный символ — работает
+alert( user[Symbol.for("isAdmin")] );
+
+//
+// iterators
+let arr = [1, 2, 3]; // массив — пример итерируемого объекта
+for (let value of arr) {
+  alert(value); // 1, затем 2, затем 3
+}
+for (let char of "Привет") {
+  alert(char); // Выведет по одной букве: П, р, и, в, е, т
+}
+
+let range = {from: 1, to: 5};
+// сделаем объект range итерируемым
+range[Symbol.iterator] = function() {
+    let current = this.from;
+    let last = this.to;
+    // метод должен вернуть объект с методом next()
+    return {
+      next() {
+        if (current <= last) {
+          return {
+            done: false,
+            value: current++
+          };
+        } else {
+          return {
+            done: true
+          };
+        }
+      }  
+    }
+};
+for (let num of range) {
+    alert(num); // 1, затем 2, 3, 4, 5
+}
+
+// 
+// generators
+function* generateSequence() {
+    yield 1;
+    yield 2;
+    return 3;
+}
