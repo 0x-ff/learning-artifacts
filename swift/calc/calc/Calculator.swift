@@ -1,8 +1,8 @@
 
 import Foundation
 
-// Фасад калькулятора, изолирущий логику чтения операндов и вычисления
-// результатов от логики UI фреймворка iOS
+// Интерфейсный фасад калькулятора, изолирущий структуру классов чтения операндов и вычисления
+// результатов от UI фреймворка iOS
 class Calculator {
     let OPERATION_LOG = 0
     let OPERATION_LN = 1
@@ -12,8 +12,8 @@ class Calculator {
     let OPERATION_MUL = 5
     let OPERATION_DIV = 6
 
-    private var calculatorState = CalculatorState()
-    var displayValue: String = ""
+    private var state = CalculatorState()
+    private var displayValue: String = ""
     
     init() {
         return
@@ -24,24 +24,25 @@ class Calculator {
     }
     
     func appendDot() -> Calculator {
-        if calculatorState.appendDot() {
-            displayValue = calculatorState.getDisplayValue()
+        if state.appendDot() {
+            displayValue = state.getDisplayValue()
         } else {
-            displayValue = calculatorState.getLastError()
+            displayValue = state.getLastError()
         }
         return self
     }
     
     func clearState() -> Calculator {
-        calculatorState.setStateInitial()
+        state.setStateInitial()
+        displayValue = state.getDisplayValue()
         return self
     }
     
     func appendDigit(_ digit: Character) -> Calculator {
-        if calculatorState.appendDigit(digit)  {
-            displayValue = calculatorState.getDisplayValue()
+        if state.appendDigit(digit)  {
+            displayValue = state.getDisplayValue()
         } else {
-            displayValue = calculatorState.getLastError()
+            displayValue = state.getLastError()
         }
         return self
     }
@@ -49,16 +50,20 @@ class Calculator {
     func calculateUnary(_ operation: Int) -> Calculator {
         var op: UnaryOperation
         switch (operation) {
-        case OPERATION_LOG:
-            op = OperationLog()
+            case OPERATION_LOG:
+                op = OperationLog()
+            case OPERATION_LN:
+                op = OperationLn()
+            case OPERATION_SQRT:
+                op = OperationSqrt()
             default:
-                displayValue = "error \(operation)"
+                displayValue = "error unknown operation\(operation)"
                 return self
         }
-        if calculatorState.calculateUnary(&op) {
-            displayValue = calculatorState.getDisplayValue()
+        if state.calculateUnary(&op) {
+            displayValue = state.getDisplayValue()
         } else {
-            displayValue = calculatorState.getLastError()
+            displayValue = state.getLastError()
         }
         return self
     }
@@ -66,26 +71,32 @@ class Calculator {
     func binaryOperation(_ operation: Int) -> Calculator {
         var op: BinaryOperation
         switch (operation) {
-        case OPERATION_PLUS:
-            op = OperationPlus()
-        default:
-            displayValue = "error \(operation)"
-            return self
+            case OPERATION_PLUS:
+                op = OperationPlus()
+            case OPERATION_MINUS:
+                op = OperationMinus()
+            case OPERATION_MUL:
+                op = OperationMul()
+            case OPERATION_DIV:
+                op = OperationDiv()
+            default:
+                displayValue = "error \(operation)"
+                return self
         }
         
-        if calculatorState.binaryOperation(op){
-            displayValue = calculatorState.getDisplayValue()
+        if state.binaryOperation(op){
+            displayValue = state.getDisplayValue()
         } else {
-            displayValue = calculatorState.getLastError()
+            displayValue = state.getLastError()
         }
         return self
     }
     
     func execute() -> Calculator {
-        if calculatorState.calculateBinary() {
-            displayValue = calculatorState.getDisplayValue()
+        if state.calculateBinary() {
+            displayValue = state.getDisplayValue()
         } else {
-            displayValue = calculatorState.getLastError()
+            displayValue = state.getLastError()
         }
         return self
     }

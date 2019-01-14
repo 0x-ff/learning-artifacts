@@ -30,6 +30,7 @@ class OperandReader {
         isDotSet = false
         rawValue = "0"
         value = 0.0
+        lastError = ""
     }
     
     func appendDot() -> Bool {

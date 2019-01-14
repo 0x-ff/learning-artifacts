@@ -37,6 +37,7 @@ class CalculatorState {
         left.clearValue()
         right.clearValue()
         lastError = ""
+        displayValue = left.getRawValue()
         state = STATE_INITIAL
     }
     
