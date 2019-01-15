@@ -3,6 +3,7 @@ import Foundation
 
 // Протокол числовых операций
 protocol Operation {
+    var name: String { get }
     var result: Double { get }
     var lastError: String { get }
     // Возвращает true если операция успешно выполнена и
@@ -23,6 +24,7 @@ protocol BinaryOperation: Operation {
 
 // Десятичный логарифм
 class OperationLog: UnaryOperation {
+    var name = "log"
     var operand: Double = 0.0
     var lastError: String = ""
     var result: Double = 0.0
@@ -32,11 +34,12 @@ class OperationLog: UnaryOperation {
     }
     
     func calculate() -> Bool {
+        lastError = ""
         if operand > 0 {
-            result = log(operand)
+            result = log10(operand)
             return true
         } else {
-            lastError = "error: log(\(operand))"
+            lastError = "error: negative or zero value"
             return false
         }
     }
@@ -44,8 +47,7 @@ class OperationLog: UnaryOperation {
 
 // Натуральный логарифм
 class OperationLn: UnaryOperation {
-    let euler = M_LOG10E
-    
+    var name = "ln"
     var operand: Double = 0.0
     var lastError: String = ""
     var result: Double = 0.0
@@ -55,11 +57,12 @@ class OperationLn: UnaryOperation {
     }
     
     func calculate() -> Bool {
+        lastError = ""
         if operand > 0 {
-            result = log(operand)/euler
+            result = log(operand)
             return true
         } else {
-            lastError = "error: ln(\(operand))"
+            lastError = "error: negative or zero value"
             return false
         }
     }
@@ -67,6 +70,7 @@ class OperationLn: UnaryOperation {
 
 // Извлечение квадратного корня
 class OperationSqrt: UnaryOperation {
+    var name = "sqrt"
     var operand: Double = 0.0
     var lastError: String = ""
     var result: Double = 0.0
@@ -76,11 +80,12 @@ class OperationSqrt: UnaryOperation {
     }
     
     func calculate() -> Bool {
+        lastError = ""
         if operand >= 0 {
             result = sqrt(operand)
             return true
         } else {
-            lastError = "error: sqrt(\(operand))"
+            lastError = "error: negative value"
             return false
         }
     }
@@ -88,6 +93,7 @@ class OperationSqrt: UnaryOperation {
 
 // Сложение
 class OperationPlus: BinaryOperation {
+    var name = "plus"
     var leftOperand: Double = 0.0
     var rightOperand: Double = 0.0
     var lastError: String = ""
@@ -105,6 +111,7 @@ class OperationPlus: BinaryOperation {
 
 // Вычитание
 class OperationMinus: BinaryOperation {
+    var name = "minus"
     var leftOperand: Double = 0.0
     var rightOperand: Double = 0.0
     var lastError: String = ""
@@ -122,6 +129,7 @@ class OperationMinus: BinaryOperation {
 
 // Умножение
 class OperationMul: BinaryOperation {
+    var name = "mul"
     var leftOperand: Double = 0.0
     var rightOperand: Double = 0.0
     var lastError: String = ""
@@ -139,6 +147,7 @@ class OperationMul: BinaryOperation {
 
 // Деление
 class OperationDiv: BinaryOperation {
+    var name = "div"
     var leftOperand: Double = 0.0
     var rightOperand: Double = 0.0
     var lastError: String = ""
@@ -149,6 +158,7 @@ class OperationDiv: BinaryOperation {
     }
     
     func calculate() -> Bool {
+        lastError = ""
         if rightOperand != 0 {
             result = leftOperand / rightOperand
             return true

@@ -1,8 +1,11 @@
 
 import Foundation
 
-// Интерфейсный фасад калькулятора, изолирущий структуру классов чтения операндов и вычисления
-// результатов от UI фреймворка iOS
+// Интерфейсный фасад калькулятора, изолирущий
+// 1. Cтруктуру классов чтения операндов/состояния конечного автомата
+// 2. Логику вычисления результатов
+// 3. Обработку исключений
+// от UI инструментария ViewController iOS
 class Calculator {
     let OPERATION_LOG = 0
     let OPERATION_LN = 1
@@ -21,6 +24,10 @@ class Calculator {
     
     func getDisplayValue() -> String {
         return displayValue
+    }
+    
+    func getStateDescription() -> String {
+        return state.describe()
     }
     
     func appendDot() -> Calculator {
@@ -47,7 +54,7 @@ class Calculator {
         return self
     }
     
-    func calculateUnary(_ operation: Int) -> Calculator {
+    func executeUnary(_ operation: Int) -> Calculator {
         var op: UnaryOperation
         switch (operation) {
             case OPERATION_LOG:
@@ -84,7 +91,7 @@ class Calculator {
                 return self
         }
         
-        if state.binaryOperation(op){
+        if state.inputBinary(op){
             displayValue = state.getDisplayValue()
         } else {
             displayValue = state.getLastError()

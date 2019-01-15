@@ -189,12 +189,21 @@
                                     <action selector="clickLogButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7IC-rh-UcP"/>
                                 </connections>
                             </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="77h-f5-szT">
+                                <rect key="frame" x="16" y="579" width="339" height="82"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="hHy-xo-VmX"/>
                     </view>
                     <connections>
                         <outletCollection property="output" destination="YVB-Fv-wFz" collectionClass="NSMutableArray" id="iIH-PO-Cjj"/>
+                        <outletCollection property="output" destination="YVB-Fv-wFz" collectionClass="NSMutableArray" id="mac-cQ-dFf"/>
+                        <outletCollection property="debugState" destination="77h-f5-szT" collectionClass="NSMutableArray" id="OOZ-yA-CNF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

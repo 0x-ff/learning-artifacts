@@ -10,8 +10,11 @@ class CalculatorState {
     // Состояние чтения левого операнда
     let STATE_COLLECT_LEFT = 1
     
+    // Состояние когда завершили вводить левый операнд
+    let STATE_COMPLETE_LEFT = 2
+    
     // Состояние чтения правого операнда
-    let STATE_COLLECT_RIGHT = 2
+    let STATE_COLLECT_RIGHT = 3
     
     // Текущее состояние автомата
     private var state: Int
@@ -29,6 +32,31 @@ class CalculatorState {
         return
     }
     
+    // Отладочный вывод в строку всего текущего состояния объекта
+    func describe() -> String {
+        var description: String
+        switch (state) {
+            case STATE_INITIAL:
+                description = "initial\n"
+            case STATE_COLLECT_LEFT:
+                description = "collecting left\n"
+            case STATE_COMPLETE_LEFT:
+                description = "complete left\n"
+            case STATE_COLLECT_RIGHT:
+                description = "colecting right\n"
+            default:
+                description = "<unknown state>"
+        }
+        description += "left op is '" + left.getRawValue() + "'\n"
+        description += "right op is '" + right.getRawValue() + "'\n"
+        var opName: String = "<nil>"
+        if binaryOperation != nil {
+            opName = binaryOperation!.name
+        }
+        description += "operation is " + opName + "\n"
+        return description
+    }
+    
     func getState() -> Int {
         return state
     }
@@ -36,18 +64,19 @@ class CalculatorState {
     func setStateInitial() {
         left.clearValue()
         right.clearValue()
-        lastError = ""
         displayValue = left.getRawValue()
         state = STATE_INITIAL
     }
     
     func setStateCollectLeft() {
-        lastError = ""
         state = STATE_COLLECT_LEFT
     }
     
+    func setStateCompleteLeft() {
+        state = STATE_COMPLETE_LEFT
+    }
+    
     func setStateCollectRight() {
-        lastError = ""
         state = STATE_COLLECT_RIGHT
     }
     
@@ -71,6 +100,10 @@ class CalculatorState {
             
         case STATE_COLLECT_LEFT:
             return appendDotLeft()
+            
+        case STATE_COMPLETE_LEFT:
+            setStateCollectRight()
+            return appendDotRight()
             
         case STATE_COLLECT_RIGHT:
             return appendDotRight()
@@ -110,6 +143,10 @@ class CalculatorState {
         case STATE_COLLECT_LEFT:
             return appendDigitLeft(digit)
             
+        case STATE_COMPLETE_LEFT:
+            setStateCollectRight()
+            return appendDigitRight(digit)
+            
         case STATE_COLLECT_RIGHT:
             return appendDigitRight(digit)
             
@@ -140,8 +177,9 @@ class CalculatorState {
     }
     
     func calculateUnary(_ operation: inout UnaryOperation) -> Bool {
+        binaryOperation = nil
         switch state {
-        case STATE_INITIAL | STATE_COLLECT_LEFT:
+        case STATE_INITIAL, STATE_COLLECT_LEFT, STATE_COMPLETE_LEFT:
             // Считаем, что производим операцию с левым операндом
             // В этом состоянии у него должно быть значение 0
             if left.parse() {
@@ -169,6 +207,7 @@ class CalculatorState {
                     left.setValue(operation.result)
                     setStateCollectLeft()
                     displayValue = left.getRawValue()
+                    right.clearValue()
                     return true
                 } else {
                     setStateInitial()
@@ -185,14 +224,22 @@ class CalculatorState {
         }
     }
     
-    func binaryOperation(_ op: BinaryOperation) -> Bool {
-        binaryOperation = op
+    func inputBinary(_ op: BinaryOperation) -> Bool {
         switch (state) {
-            case STATE_INITIAL | STATE_COLLECT_LEFT:
-                setStateCollectRight()
+            case STATE_INITIAL, STATE_COLLECT_LEFT:
+                setStateCompleteLeft()
+                binaryOperation = op
+                return true
+            case STATE_COMPLETE_LEFT:
+                binaryOperation = op
                 return true
             case STATE_COLLECT_RIGHT:
-                return calculateBinary()
+                if binaryOperation == nil {
+                    binaryOperation = op
+                }
+                let result: Bool = calculateBinary()
+                binaryOperation = op
+                return result
             default:
                 lastError = "calculatorState error: \(state)"
                 return false
@@ -201,7 +248,7 @@ class CalculatorState {
     
     func calculateBinary() -> Bool {
         switch state {
-        case STATE_INITIAL | STATE_COLLECT_LEFT:
+        case STATE_INITIAL, STATE_COLLECT_LEFT, STATE_COMPLETE_LEFT:
             // Считаем, что производим пустую операцию, которая не делает ничего
             return true
             
@@ -227,7 +274,7 @@ class CalculatorState {
                 binaryOperation = nil
                 displayValue = left.getRawValue()
                 right.clearValue()
-                setStateCollectLeft()
+                setStateCompleteLeft()
                 return true
             } else {
                 lastError = binaryOperation!.lastError

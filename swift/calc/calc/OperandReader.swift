@@ -35,7 +35,7 @@ class OperandReader {
     
     func appendDot() -> Bool {
         if isDotSet {
-            return false
+            return true
         }
         isDotSet = true
         rawValue.append(".")
