@@ -1,2 +1,8 @@
 .idea
 .DS_Store
+.vscode
+*.out
+*.o
+*.dSYM
+llvm-intro/firststep/helloworld
+llvm-intro/kaleidoscope/toy
