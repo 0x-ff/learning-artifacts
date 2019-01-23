@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 2.8)
+project(hello_world)
+include_directories(foo)
+set(SOURCE_EXE main.cpp)
+add_executable(main ${SOURCE_EXE})
+target_link_libraries(main foo)
+add_subdirectory(foo)
+target_link_libraries(main foo)
