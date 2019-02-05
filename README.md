@@ -19,3 +19,8 @@
 - https://trello.com/c/mhXdI1dE/725-книга-llvm-инфраструктура-для-разработки-компиляторов
 Хакатоню LLVM, CMake и близкие к этому инструменты
 
+## golang/graph
+- https://trello.com/c/992RlfFj/728-книга-саммерфилд-программирование-на-языке-go
+Закрепляем навыки кодинга на Go + изучаем алгоритмы на графах
+```GOPATH=`pwd` go run main.go > res.dot```
+```dot -Tpng res.dot > res.png```
