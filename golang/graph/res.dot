@@ -1,0 +1,7 @@
+digraph G {
+вершина0 -> vertice1;
+vertice2 -> vertice3;
+vertice3 -> vertice2;
+vertice3 -> vertice3;
+vertice3 -> vertice1;
+}
