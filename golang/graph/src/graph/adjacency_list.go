@@ -71,6 +71,32 @@ func (gr AdjacencyListGraph) EdgesCount() int {
 	return count
 }
 
+// Количество входящих в указанную вершину ребер.
+func (gr AdjacencyListGraph) InEdgesCount(verticeId int) int {
+	count := 0
+	for _, list := range gr.edges {
+		for _, toVerticeId := range list {
+			if toVerticeId == verticeId {
+				count = count + 1
+				break
+			}
+		}
+	}
+	return count
+}
+
+// Количество исходящих из указанной вершины ребер
+func (gr AdjacencyListGraph) OutEdgesCount(verticeId int) int {
+	count := 0
+	for fromVerticeId, list := range gr.edges {
+		if fromVerticeId == verticeId {
+			count = len(list)
+			break
+		}
+	}
+	return count
+}
+
 // Добавить вершину
 func (gr *AdjacencyListGraph) AddVertice() int {
 	l := len(gr.vertices)

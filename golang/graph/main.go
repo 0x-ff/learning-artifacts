@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	g := graph.MakeAdjacencyMatrixGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	vId1 := g.AddVertice()
 	vId2 := g.AddVertice()
 	vId3 := g.AddVertice()
@@ -15,7 +15,6 @@ func main() {
 	g.AddEdge(vId1, vId2)
 	g.AddEdge(vId3, vId4)
 	g.AddEdge(vId4, vId3)
-	g.AddEdge(vId4, vId4)
 	g.AddEdge(vId4, vId2)
 
 	g.BindDataVertice(graph.MakeLabelData("вершина0"), vId1)

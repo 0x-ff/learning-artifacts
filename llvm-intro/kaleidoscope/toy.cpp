@@ -8,8 +8,23 @@
 #include <string>
 #include <vector>
 
+#include "llvm/IR/LegacyPassManager.h"
+
 using namespace llvm;
 #include "Parser.cpp"
+
+static std::unique_ptr<legacy::FunctionPassManager> TheFPM;
+
+void InitializeModuleAndPassManager(void) {
+  TheModule = llvm::make_unique<Module>("JIT", TheContext);
+
+  TheFPM = llvm::make_unique<FunctionPassManager>(TheModule.get());
+  TheFPM->add(createInstructionCombiningPass());
+  TheFPM->add(createReassociatePass());
+  TheFPM->add(createGVNPass());
+  TheFPM->add(createCFGSimplificationPass());
+  TheFPM->doInitialization();
+}
 
 static void HandleDefinition() {
   if (auto FnAST = ParseDefinition()) {

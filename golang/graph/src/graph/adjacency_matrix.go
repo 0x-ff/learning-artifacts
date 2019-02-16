@@ -61,6 +61,36 @@ func (gr AdjacencyMatrixGraph) EdgesCount() int {
 	return count
 }
 
+// Количество входящих в указанную вершину ребер.
+func (gr AdjacencyMatrixGraph) InEdgesCount(verticeId int) int {
+	count := 0
+	for _, list := range gr.matrix {
+		for toVerticeId, has := range list {
+			if toVerticeId == verticeId && has {
+				count = count + 1
+				break
+			}
+		}
+	}
+	return count
+}
+
+// Количество исходящих из указанной вершины ребер
+func (gr AdjacencyMatrixGraph) OutEdgesCount(verticeId int) int {
+	count := 0
+	for fromVerticeId, list := range gr.matrix {
+		if fromVerticeId == verticeId {
+			for _, has := range list {
+				if has {
+					count = count + 1
+				}
+			}
+			break
+		}
+	}
+	return count
+}
+
 // Добавить вершину
 func (gr *AdjacencyMatrixGraph) AddVertice() int {
 	maxVerticeId := -1

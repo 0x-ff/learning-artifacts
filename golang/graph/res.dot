@@ -1,7 +1,6 @@
 digraph G {
 vertice2 -> vertice3;
-vertice3 -> vertice1;
 vertice3 -> vertice2;
-vertice3 -> vertice3;
+vertice3 -> vertice1;
 вершина0 -> vertice1;
 }

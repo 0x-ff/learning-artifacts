@@ -1,6 +1,8 @@
 
 package graph
 
+const UnknownVerticeId = -1
+
 // Данные привязанные к вершине или ребру
 type Data interface {
 	Get() interface{}
@@ -35,6 +37,12 @@ type Graph interface {
 
 	// Количество ребер
 	EdgesCount() int
+
+	// Количество входящих в указанную вершину ребер.
+	InEdgesCount(verticeId int) int
+
+	// Количество исходящих из этой вершины ребер.
+	OutEdgesCount(verticeId int) int
 
 	// Добавить вершину
 	AddVertice() int

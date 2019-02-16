@@ -8,29 +8,29 @@ import (
 )
 
 func TestIsEmpty(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	assert.True(t, g.IsEmpty())
 }
 
 func TestIsNotEmpty(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	g.AddVertice()
 	assert.False(t, g.IsEmpty())
 }
 
 func TestNotHasVertice(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	assert.False(t, g.HasVertice(0))
 }
 
 func TestHasVertice(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	vId := g.AddVertice()
 	assert.True(t, g.HasVertice(vId))
 }
 
 func TestNotHasEdge(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
 	err, added := g.AddEdge(v1Id, v2Id)
@@ -40,7 +40,7 @@ func TestNotHasEdge(t *testing.T) {
 }
 
 func TestHasEdge(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
 	err, added := g.AddEdge(v1Id, v2Id)
@@ -50,7 +50,7 @@ func TestHasEdge(t *testing.T) {
 }
 
 func TestVerticesCount(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	assert.Equal(t, 0, g.VerticesCount())
 
 	g.AddVertice()
@@ -58,7 +58,7 @@ func TestVerticesCount(t *testing.T) {
 }
 
 func TestEdgesCount(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	assert.Equal(t, 0, g.EdgesCount())
 
 	v1Id := g.AddVertice()
@@ -79,7 +79,7 @@ func TestEdgesCount(t *testing.T) {
 }
 
 func TestInEdgesCount(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
@@ -95,33 +95,31 @@ func TestInEdgesCount(t *testing.T) {
 	assert.Equal(t, 0, g.InEdgesCount(v1Id))
 	assert.Equal(t, 1, g.InEdgesCount(v2Id))
 	assert.Equal(t, 0, g.InEdgesCount(v3Id))
-
+	
 	err, ok = g.AddEdge(v2Id, v1Id)
 	assert.NoError(t, err)
 	assert.True(t, ok)
-	err, ok = g.AddEdge(v1Id, v1Id)
-	assert.NoError(t, err)
-	assert.True(t, ok)
-	assert.Equal(t, 2, g.InEdgesCount(v1Id))
+
+	assert.Equal(t, 1, g.InEdgesCount(v1Id))
 	assert.Equal(t, 1, g.InEdgesCount(v2Id))
 	assert.Equal(t, 0, g.InEdgesCount(v3Id))
-
+	
 	err, ok = g.AddEdge(v3Id, v1Id)
 	assert.NoError(t, err)
 	assert.True(t, ok)
-	assert.Equal(t, 3, g.InEdgesCount(v1Id))
+	assert.Equal(t, 2, g.InEdgesCount(v1Id))
 	assert.Equal(t, 1, g.InEdgesCount(v2Id))
 	assert.Equal(t, 0, g.InEdgesCount(v3Id))
 
-	ok = g.RemoveEdge(v1Id, v1Id)
+	ok = g.RemoveEdge(v2Id, v1Id)
 	assert.True(t, ok)
-	assert.Equal(t, 2, g.InEdgesCount(v1Id))
+	assert.Equal(t, 1, g.InEdgesCount(v1Id))
 	assert.Equal(t, 1, g.InEdgesCount(v2Id))
 	assert.Equal(t, 0, g.InEdgesCount(v3Id))
 }
 
 func TestOutEdgesCount(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
@@ -134,6 +132,7 @@ func TestOutEdgesCount(t *testing.T) {
 	err, ok := g.AddEdge(v1Id, v2Id)
 	assert.NoError(t, err)
 	assert.True(t, ok)
+
 	assert.Equal(t, 1, g.OutEdgesCount(v1Id))
 	assert.Equal(t, 0, g.OutEdgesCount(v2Id))
 	assert.Equal(t, 0, g.OutEdgesCount(v3Id))
@@ -141,29 +140,27 @@ func TestOutEdgesCount(t *testing.T) {
 	err, ok = g.AddEdge(v2Id, v1Id)
 	assert.NoError(t, err)
 	assert.True(t, ok)
-	err, ok = g.AddEdge(v1Id, v1Id)
-	assert.NoError(t, err)
-	assert.True(t, ok)
-	assert.Equal(t, 2, g.OutEdgesCount(v1Id))
+	assert.Equal(t, 1, g.OutEdgesCount(v1Id))
 	assert.Equal(t, 1, g.OutEdgesCount(v2Id))
 	assert.Equal(t, 0, g.OutEdgesCount(v3Id))
 
 	err, ok = g.AddEdge(v3Id, v1Id)
 	assert.NoError(t, err)
 	assert.True(t, ok)
-	assert.Equal(t, 2, g.OutEdgesCount(v1Id))
+
+	assert.Equal(t, 1, g.OutEdgesCount(v1Id))
 	assert.Equal(t, 1, g.OutEdgesCount(v2Id))
 	assert.Equal(t, 1, g.OutEdgesCount(v3Id))
 
-	ok = g.RemoveEdge(v1Id, v1Id)
+	ok = g.RemoveEdge(v1Id, v2Id)
 	assert.True(t, ok)
-	assert.Equal(t, 1, g.OutEdgesCount(v1Id))
+	assert.Equal(t, 0, g.OutEdgesCount(v1Id))
 	assert.Equal(t, 1, g.OutEdgesCount(v2Id))
 	assert.Equal(t, 1, g.OutEdgesCount(v3Id))
 }
 
 func TestAddVertice(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	assert.Equal(t, 0, g.AddVertice())
 	assert.Equal(t, 1, g.VerticesCount())
@@ -176,7 +173,7 @@ func TestAddVertice(t *testing.T) {
 }
 
 func TestAddEdge(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
@@ -194,7 +191,7 @@ func TestAddEdge(t *testing.T) {
 }
 
 func TestAddEdgeComplex(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
@@ -216,7 +213,7 @@ func TestAddEdgeComplex(t *testing.T) {
 }
 
 func TestAddEdgeToVerticeNotExists(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	err, ok := g.AddEdge(1, 0)
 	assert.False(t, ok)
@@ -224,7 +221,7 @@ func TestAddEdgeToVerticeNotExists(t *testing.T) {
 }
 
 func TestAddEdgeFromVerticeNotExists(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	g.AddVertice()
 	err, ok := g.AddEdge(1, 0)
@@ -233,7 +230,7 @@ func TestAddEdgeFromVerticeNotExists(t *testing.T) {
 }
 
 func TestAddEdgeAlreadyExists(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
@@ -249,7 +246,7 @@ func TestAddEdgeAlreadyExists(t *testing.T) {
 }
 
 func TestRemoveEdgesEnding(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
@@ -290,7 +287,7 @@ func TestRemoveEdgesEnding(t *testing.T) {
 }
 
 func TestRemoveVertice(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
@@ -331,13 +328,13 @@ func TestRemoveVertice(t *testing.T) {
 }
 
 func TestRemoveEdgeNeverExist(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	ok := g.RemoveEdge(0, 1)
 	assert.False(t, ok)
 }
 
 func TestRemoveRemovedEdge(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
@@ -371,7 +368,7 @@ func TestRemoveRemovedEdge(t *testing.T) {
 }
 
 func TestRemoveEdge(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 
 	v1Id := g.AddVertice()
 	v2Id := g.AddVertice()
@@ -401,7 +398,7 @@ func TestRemoveEdge(t *testing.T) {
 }
 
 func TestBindDataVerticeNotExist(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeIncidentMatrixGraph()
 	l := graph.MakeLabelData("bind")
 
 	ok := g.BindDataVertice(l, 1)
@@ -413,7 +410,7 @@ func TestBindDataVerticeNotExist(t *testing.T) {
 }
 
 func TestBindDataVertice(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeAdjacencyMatrixGraph()
 	vId := g.AddVertice()
 	l := graph.MakeLabelData("bind")
 
@@ -427,7 +424,7 @@ func TestBindDataVertice(t *testing.T) {
 }
 
 func TestBindDataEdgeNotExist(t *testing.T) {
-	g := graph.MakeAdjacencyListGraph()
+	g := graph.MakeAdjacencyMatrixGraph()
 	l := graph.MakeLabelData("bind")
 
 	ok := g.BindDataEdge(l, 1, 1)
