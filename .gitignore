@@ -8,3 +8,6 @@ llvm-intro/firststep/helloworld
 llvm-intro/kaleidoscope/toy
 build/
 .ipynb_checkpoints
+*.csv
+*.data
+*.test
