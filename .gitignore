@@ -11,3 +11,4 @@ build/
 *.csv
 *.data
 *.test
+aclImdb
