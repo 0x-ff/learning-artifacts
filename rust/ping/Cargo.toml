@@ -1,0 +1,9 @@
+[package]
+name = "ping"
+version = "0.1.0"
+authors = ["Pavel Ivanisenko <pivanisenko@avito.ru>"]
+edition = "2018"
+
+[dependencies]
+clap = "~2.19.0"
+pnet = "0.22.0"
