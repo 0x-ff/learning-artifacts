@@ -1,0 +1,9 @@
+[package]
+name = "example"
+version = "0.1.0"
+authors = ["Pavel Ivanisenko <pivanisenko@avito.ru>"]
+edition = "2018"
+
+[dependencies]
+panic-control="0.1.*"
+regex="0.2.2"
